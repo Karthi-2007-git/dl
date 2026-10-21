@@ -7,22 +7,24 @@ from pathlib import Path
 from urllib.request import urlopen
 
 EXPERIMENTS = [
-("XOR MLP alarm", "xor_mlp.py", "door sensor binary perceptron"),
-("ANN digit character recognition", "ann_characters.py", "handwritten mnist letter plate"),
-("Autoencoder image anomaly", "autoencoder_xray.py", "xray reconstruct denoise compress"),
-("MFCC speech commands", "speech_commands.py", "spoken word digit audio"),
-("Speech to text", "speech_to_text.py", "whisper lecture transcript audio"),
-("CNN image classification", "image_classification.py", "vehicle traffic sign image"),
-("YOLO vehicle detection", "vehicle_detection.py", "track count traffic helmet video"),
-("Financial anomaly detection", "financial_anomaly.py", "stock volume transaction unusual"),
-("Fraud classification", "fraud_classification.py", "fraud precision recall imbalance"),
-("LSTM stock forecast", "stock_lstm.py", "stock price time series prediction"),
-("RBM digit features", "rbm_digits.py", "handwritten generate reconstruct"),
-("LSTM sentiment", "sentiment_lstm.py", "review tweet complaint positive negative"),
+("XOR MLP alarm", "xor_mlp.py", "xor door sensor binary perceptron hidden neuron different inputs"),
+("ANN digit character recognition", "ann_characters.py", "ann handwritten digit character mnist letter register plate dropout hidden layer"),
+("Autoencoder image anomaly", "autoencoder_xray.py", "autoencoder xray chest image reconstruction denoising compression unusual radiology"),
+("MFCC speech commands", "speech_commands.py", "speech spoken command word digit mfcc mel keyword cnn lstm noise"),
+("Speech to text", "speech_to_text.py", "speech text audio lecture transcript whisper recording"),
+("CNN image classification", "image_classification.py", "cnn vehicle car bus truck motorcycle traffic sign stop speed image"),
+("YOLO vehicle detection", "vehicle_detection.py", "yolo detect locate track count vehicle traffic density congestion helmet rider video"),
+("Financial anomaly detection", "financial_anomaly.py", "financial stock trading volume transaction unusual anomaly monitoring threshold alert"),
+("Fraud classification", "fraud_classification.py", "fraud transaction legitimate precision recall f1 imbalance class weight random forest"),
+("LSTM stock forecast", "stock_lstm.py", "stock price time series lstm forecast prediction error unusual changes"),
+("RBM digit features", "rbm_digits.py", "rbm handwritten digit reconstruct generate synthetic limited training feature extraction"),
+("LSTM sentiment", "sentiment_lstm.py", "sentiment review movie product airline tweet feedback complaint category positive negative neutral"),
 ]
 
+STOP = set("a an the and or to of for in on with using wants need needs develop create create a python program based system model".split())
+
 def tokens(text):
-    return re.findall(r"[a-z0-9]+", text.lower())
+    return [x for x in re.findall(r"[a-z0-9]+", text.lower()) if x not in STOP]
 
 def choose(question):
     query = tokens(question)
@@ -31,8 +33,14 @@ def choose(question):
     best = (0, None)
     for item in EXPERIMENTS:
         vocab = tokens(item[0] + " " + item[2])
-        score = sum(max(difflib.SequenceMatcher(None, q, v).ratio()
+        exact = sum(q in vocab for q in query)
+        fuzzy = sum(max(difflib.SequenceMatcher(None, q, v).ratio()
                         for v in vocab) for q in query) / len(query)
+        score = exact * 2 + fuzzy
+        joined = " ".join(query)
+        for word in ("autoencoder", "rbm", "lstm", "yolo", "mfcc", "whisper", "xor"):
+            if word in joined and word in vocab:
+                score += 5
         if score > best[0]:
             best = score, item
     if best[0] < .45:
