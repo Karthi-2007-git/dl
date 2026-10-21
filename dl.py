@@ -36,7 +36,8 @@ GROUPS = [
 ]
 
 def tokens(text):
-    result = [x for x in re.findall(r"[a-z0-9]+", text.lower()) if x not in STOP]
+    text = text.lower().replace("auto-encoder", "autoencoder")
+    result = [x for x in re.findall(r"[a-z0-9]+", text) if x not in STOP]
     aliases = {"fraudulent": "fraud", "suspicious": "transaction",
                "spoken": "speech", "handwritten": "handwritten"}
     return result + [aliases[x] for x in result if x in aliases]
