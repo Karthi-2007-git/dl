@@ -53,7 +53,7 @@ def choose(question):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("question", nargs="*")
-    p.add_argument("--repo")
+    p.add_argument("--repo", default="Karthi-2007-git/dl")
     p.add_argument("--branch", default="main")
     p.add_argument("--base-url")
     p.add_argument("-o", "--output", default="output.py")
@@ -62,8 +62,6 @@ def main():
     if a.list:
         print("\n".join(f"{x} -> {y}" for x, y, _ in EXPERIMENTS))
         return
-    if not a.repo and not a.base_url:
-        p.error("use --repo OWNER/REPO")
     try:
         (title, file, _), score = choose(" ".join(a.question) or sys.stdin.read())
         base = a.base_url or f"https://raw.githubusercontent.com/{a.repo}/{a.branch}"
