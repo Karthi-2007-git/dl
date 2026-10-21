@@ -43,14 +43,14 @@ published with the template files and used from any checkout.
 
 ## Fetch from GitHub without the repository
 
-Publish `dl_lab_remote.py` together with the experiment files. On a machine with
+Publish `dl.py` together with the experiment files. On a machine with
 only Python and internet access, download just the launcher and fetch a matching
 template directly into `output.py`:
 
 ```powershell
-curl.exe -L https://raw.githubusercontent.com/USER/REPO/main/dl_lab_remote.py -o dl.py
-python dl.py --repo USER/REPO "a smart door unlocks when exactly one sensor is active"
-python dl.py --repo USER/REPO "detect unusual stock price and trading volume patterns" -o output.py
+curl.exe -L https://raw.githubusercontent.com/USER/REPO/main/dl.py -o dl.py
+python dl.py "a smart door unlocks when exactly one sensor is active"
+python dl.py "detect unusual stock price and trading volume patterns"
 python output.py
 ```
 

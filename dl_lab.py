@@ -1,7 +1,7 @@
 """Find a close local experiment title and print its code."""
 import argparse
 from pathlib import Path
-from dl_lab_remote import EXPERIMENTS, choose
+from dl import EXPERIMENTS, choose
 
 p = argparse.ArgumentParser()
 p.add_argument("question", nargs="*")

@@ -56,7 +56,6 @@ def main():
     p.add_argument("--repo", default="Karthi-2007-git/dl")
     p.add_argument("--branch", default="main")
     p.add_argument("--base-url")
-    p.add_argument("-o", "--output", default="output.py")
     p.add_argument("--list", action="store_true")
     a = p.parse_args()
     if a.list:
@@ -65,10 +64,10 @@ def main():
     try:
         (title, file, _), score = choose(" ".join(a.question) or sys.stdin.read())
         base = a.base_url or f"https://raw.githubusercontent.com/{a.repo}/{a.branch}"
-        Path(a.output).write_bytes(urlopen(f"{base.rstrip('/')}/{file}").read())
+        Path("output.py").write_bytes(urlopen(f"{base.rstrip('/')}/{file}").read())
     except (LookupError, ValueError, OSError) as e:
         p.error(str(e))
-    print(f"matched: {title}\nestimate: {score:.2f}\nsaved: {a.output}")
+    print(f"matched: {title}\nestimate: {score:.2f}\nsaved: output.py")
 
 if __name__ == "__main__":
     main()
