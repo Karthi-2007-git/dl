@@ -7,6 +7,8 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.request import urlopen
 
+VERSION = "2"
+
 EXPERIMENTS = [
 ("XOR MLP alarm", "xor_mlp.py", "xor door sensor sensors exactly one different binary perceptron hidden neuron configuration accuracy"),
 ("ANN digit character recognition", "ann_characters.py", "ann handwritten handwritten digit character mnist letter register plate dropout hidden layer"),
