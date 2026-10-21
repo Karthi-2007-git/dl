@@ -83,10 +83,10 @@ def full_questions(base):
                 result.append(text)
     return result
 
-def matching_question(question, questions, file):
+def matching_questions(question, questions, file):
     ranges = [range(a, b + 1) for a, b, f in GROUPS if f == file]
     pool = [questions[i - 1] for r in ranges for i in r if i <= len(questions)]
-    return max(pool, key=lambda x: similarity(question, x))
+    return sorted(pool, key=lambda x: similarity(question, x), reverse=True)
 
 def main():
     p = argparse.ArgumentParser()
@@ -103,16 +103,20 @@ def main():
         question = " ".join(a.question) or sys.stdin.read()
         base = a.base_url or f"https://raw.githubusercontent.com/{a.repo}/{a.branch}"
         questions = full_questions(base)
+        seen = set()
         for score, (title, file, _) in choices(question):
-            original = matching_question(question, questions, file)
-            print(f"\nYour question: {question}")
-            print(f"Matched question: {original}")
-            print(f"Template: {title} ({score:.2f})")
-            if input("Use this answer? [y/n] ").lower().startswith("y"):
-                source = urlopen(f"{base.rstrip('/')}/{file}").read()
-                header = f'QUESTION = {original!r}\nprint("Question:", QUESTION)\n\n'.encode()
-                Path("output.py").write_bytes(header + source)
-                break
+            for original in matching_questions(question, questions, file):
+                if original in seen:
+                    continue
+                seen.add(original)
+                print(f"\nYour question: {question}")
+                print(f"Matched question: {original}")
+                print(f"Template: {title} ({score:.2f})")
+                if input("Use this answer? [y/n] ").lower().startswith("y"):
+                    source = urlopen(f"{base.rstrip('/')}/{file}").read()
+                    header = f'QUESTION = {original!r}\nprint("Question:", QUESTION)\n\n'.encode()
+                    Path("output.py").write_bytes(header + source)
+                    return
         else:
             p.error("no answer selected")
     except (LookupError, ValueError, OSError) as e:
