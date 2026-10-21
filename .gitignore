@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Notebook and tool state
+.ipynb_checkpoints/
+
+# Generated experiment output and local datasets
+output.py
+data/
+*.csv
+*.wav
+*.mp3
+*.mp4
+*.avi
+
+# Local secrets and editor files
+.env
+.env.*
+.vscode/
+.idea/
+
+# Test/build caches
+.pytest_cache/
+.mypy_cache/
+*.log
