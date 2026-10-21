@@ -1,4 +1,3 @@
-"""Tiny RBM example: learn compact MNIST features."""
 from sklearn.datasets import load_digits
 from sklearn.neural_network import BernoulliRBM
 from sklearn.metrics import mean_squared_error

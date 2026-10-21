@@ -1,4 +1,3 @@
-"""Find a close experiment title, download its code, and save output.py."""
 import argparse
 import difflib
 import re

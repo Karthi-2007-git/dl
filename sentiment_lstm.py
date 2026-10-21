@@ -1,4 +1,3 @@
-"""Tiny sentiment LSTM: uses the built-in IMDB review dataset."""
 from tensorflow import keras
 from tensorflow.keras import layers
 

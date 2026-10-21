@@ -1,4 +1,3 @@
-"""Tiny fraud classifier: python fraud_classification.py transactions.csv."""
 import sys
 import pandas as pd
 from sklearn.model_selection import train_test_split

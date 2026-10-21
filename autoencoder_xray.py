@@ -1,4 +1,3 @@
-"""Tiny autoencoder example. Replace MNIST with resized X-rays when available."""
 import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers

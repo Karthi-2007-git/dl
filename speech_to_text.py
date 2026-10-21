@@ -1,4 +1,3 @@
-"""Tiny speech-to-text example: python speech_to_text.py audio.wav."""
 import sys
 import whisper
 

@@ -1,4 +1,3 @@
-"""Tiny tabular anomaly detector: python financial_anomaly.py data.csv."""
 import sys
 import numpy as np
 import pandas as pd

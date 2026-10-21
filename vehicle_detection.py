@@ -1,4 +1,3 @@
-"""Tiny YOLO example: python vehicle_detection.py traffic.mp4."""
 import sys
 from ultralytics import YOLO
 

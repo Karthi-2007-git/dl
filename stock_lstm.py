@@ -1,4 +1,3 @@
-"""Tiny stock forecaster: python stock_lstm.py prices.csv."""
 import sys
 import numpy as np
 import pandas as pd

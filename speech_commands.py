@@ -1,4 +1,3 @@
-"""Tiny speech classifier. Put WAV files in data/speech/<word>/."""
 import pathlib
 import librosa
 from sklearn.preprocessing import LabelEncoder

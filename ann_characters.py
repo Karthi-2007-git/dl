@@ -1,4 +1,3 @@
-"""Tiny ANN example: handwritten digit recognition."""
 from tensorflow import keras
 from tensorflow.keras import layers
 

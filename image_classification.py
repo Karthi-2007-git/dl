@@ -1,4 +1,3 @@
-"""Tiny CNN example: classify CIFAR-10 images."""
 from tensorflow import keras
 from tensorflow.keras import layers
 
