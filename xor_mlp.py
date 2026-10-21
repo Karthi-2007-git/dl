@@ -7,5 +7,5 @@ y = np.array([0, 1, 1, 0])
 model = MLPClassifier((4,), activation="tanh", solver="lbfgs",
                       max_iter=2000, random_state=1).fit(X, y)
 print("inputs:\n", X)
-print("predictions:", model.predict(X))
-print("accuracy:", model.score(X, y))
+print("alarm predictions:", model.predict(X))
+print("alarm accuracy:", model.score(X, y))

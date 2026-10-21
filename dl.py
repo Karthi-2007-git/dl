@@ -28,11 +28,11 @@ def tokens(text):
                "spoken": "speech", "handwritten": "handwritten"}
     return result + [aliases[x] for x in result if x in aliases]
 
-def choose(question):
+def choices(question):
     query = tokens(question)
     if not query:
         raise ValueError("enter a question")
-    best = (0, None)
+    scores = []
     for item in EXPERIMENTS:
         vocab = tokens(item[0] + " " + item[2])
         exact = sum(q in vocab for q in query)
@@ -43,11 +43,15 @@ def choose(question):
         for word in ("autoencoder", "rbm", "lstm", "yolo", "mfcc", "whisper", "xor"):
             if word in joined and word in vocab:
                 score += 5
-        if score > best[0]:
-            best = score, item
-    if best[0] < .45:
+        scores.append((score, item))
+    scores.sort(reverse=True, key=lambda x: x[0])
+    if scores[0][0] < .45:
         raise LookupError("no similar title found")
-    return best[1], best[0]
+    return scores
+
+def choose(question):
+    score, item = choices(question)[0]
+    return item, score
 
 def main():
     p = argparse.ArgumentParser()
@@ -61,12 +65,21 @@ def main():
         print("\n".join(f"{x} -> {y}" for x, y, _ in EXPERIMENTS))
         return
     try:
-        (title, file, _), score = choose(" ".join(a.question) or sys.stdin.read())
+        question = " ".join(a.question) or sys.stdin.read()
         base = a.base_url or f"https://raw.githubusercontent.com/{a.repo}/{a.branch}"
-        Path("output.py").write_bytes(urlopen(f"{base.rstrip('/')}/{file}").read())
+        for score, (title, file, _) in choices(question):
+            print(f"\nQuestion: {question}")
+            print(f"Answer: {title} ({score:.2f})")
+            if input("Use this answer? [y/n] ").lower().startswith("y"):
+                source = urlopen(f"{base.rstrip('/')}/{file}").read()
+                header = f'QUESTION = {question!r}\nprint("Question:", QUESTION)\n\n'.encode()
+                Path("output.py").write_bytes(header + source)
+                break
+        else:
+            p.error("no answer selected")
     except (LookupError, ValueError, OSError) as e:
         p.error(str(e))
-    print(f"matched: {title}\nestimate: {score:.2f}\nsaved: output.py")
+    print("saved: output.py")
 
 if __name__ == "__main__":
     main()
