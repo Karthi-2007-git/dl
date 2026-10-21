@@ -30,7 +30,7 @@ GROUPS = [
     (13, 18, "autoencoder_xray.py"), (19, 24, "speech_commands.py"),
     (25, 25, "speech_to_text.py"), (26, 26, "image_classification.py"),
     (27, 31, "vehicle_detection.py"), (32, 32, "image_classification.py"),
-    (33, 34, "financial_anomaly.py"), (35, 35, "stock_lstm.py"),
+    (33, 33, "financial_anomaly.py"), (34, 34, "fraud_classification.py"),
     (36, 37, "fraud_classification.py"), (38, 38, "financial_anomaly.py"),
     (39, 42, "rbm_digits.py"), (43, 48, "sentiment_lstm.py"),
 ]
@@ -88,6 +88,11 @@ def matching_questions(question, questions, file):
     pool = [questions[i - 1] for r in ranges for i in r if i <= len(questions)]
     return sorted(pool, key=lambda x: similarity(question, x), reverse=True)
 
+def question_file(number):
+    for start, end, file in GROUPS:
+        if start <= number <= end:
+            return file
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("question", nargs="*")
@@ -104,11 +109,13 @@ def main():
         base = a.base_url or f"https://raw.githubusercontent.com/{a.repo}/{a.branch}"
         questions = full_questions(base)
         seen = set()
+        offered = set()
         for score, (title, file, _) in choices(question):
             for original in matching_questions(question, questions, file):
-                if original in seen:
+                if original in seen or original in offered:
                     continue
                 seen.add(original)
+                offered.add(original)
                 print(f"\nYour question: {question}")
                 print(f"Matched question: {original}")
                 print(f"Template: {title} ({score:.2f})")
@@ -117,8 +124,22 @@ def main():
                     header = f'QUESTION = {original!r}\nprint("Question:", QUESTION)\n\n'.encode()
                     Path("output.py").write_bytes(header + source)
                     return
-        else:
-            p.error("no answer selected")
+        remaining = sorted(
+            ((similarity(question, text), i, text) for i, text in enumerate(questions, 1)
+             if text not in offered),
+            reverse=True,
+        )
+        for score, number, original in remaining:
+            file = question_file(number)
+            print(f"\nYour question: {question}")
+            print(f"Matched question: {original}")
+            print(f"Template: {file} ({score:.2f})")
+            if input("Use this answer? [y/n] ").lower().startswith("y"):
+                source = urlopen(f"{base.rstrip('/')}/{file}").read()
+                header = f'QUESTION = {original!r}\nprint("Question:", QUESTION)\n\n'.encode()
+                Path("output.py").write_bytes(header + source)
+                return
+        p.error("all 48 questions were rejected")
     except (LookupError, ValueError, OSError) as e:
         p.error(str(e))
     print("saved: output.py")
