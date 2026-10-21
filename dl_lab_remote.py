@@ -7,24 +7,27 @@ from pathlib import Path
 from urllib.request import urlopen
 
 EXPERIMENTS = [
-("XOR MLP alarm", "xor_mlp.py", "xor door sensor binary perceptron hidden neuron different inputs"),
-("ANN digit character recognition", "ann_characters.py", "ann handwritten digit character mnist letter register plate dropout hidden layer"),
+("XOR MLP alarm", "xor_mlp.py", "xor door sensor sensors exactly one different binary perceptron hidden neuron configuration accuracy"),
+("ANN digit character recognition", "ann_characters.py", "ann handwritten handwritten digit character mnist letter register plate dropout hidden layer"),
 ("Autoencoder image anomaly", "autoencoder_xray.py", "autoencoder xray chest image reconstruction denoising compression unusual radiology"),
-("MFCC speech commands", "speech_commands.py", "speech spoken command word digit mfcc mel keyword cnn lstm noise"),
+("MFCC speech commands", "speech_commands.py", "speech spoken spoken command word digit mfcc mel keyword cnn lstm noise"),
 ("Speech to text", "speech_to_text.py", "speech text audio lecture transcript whisper recording"),
 ("CNN image classification", "image_classification.py", "cnn vehicle car bus truck motorcycle traffic sign stop speed image"),
 ("YOLO vehicle detection", "vehicle_detection.py", "yolo detect locate track count vehicle traffic density congestion helmet rider video"),
 ("Financial anomaly detection", "financial_anomaly.py", "financial stock trading volume transaction unusual anomaly monitoring threshold alert"),
-("Fraud classification", "fraud_classification.py", "fraud transaction legitimate precision recall f1 imbalance class weight random forest"),
+("Fraud classification", "fraud_classification.py", "fraud fraudulent transaction suspicious legitimate precision recall f1 imbalance class weight random forest"),
 ("LSTM stock forecast", "stock_lstm.py", "stock price time series lstm forecast prediction error unusual changes"),
 ("RBM digit features", "rbm_digits.py", "rbm handwritten digit reconstruct generate synthetic limited training feature extraction"),
-("LSTM sentiment", "sentiment_lstm.py", "sentiment review movie product airline tweet feedback complaint category positive negative neutral"),
+("LSTM sentiment", "sentiment_lstm.py", "sentiment review movie product airline tweet feedback complaint category summarize classroom teaching laboratory positive negative neutral"),
 ]
 
 STOP = set("a an the and or to of for in on with using wants need needs develop create create a python program based system model".split())
 
 def tokens(text):
-    return [x for x in re.findall(r"[a-z0-9]+", text.lower()) if x not in STOP]
+    result = [x for x in re.findall(r"[a-z0-9]+", text.lower()) if x not in STOP]
+    aliases = {"fraudulent": "fraud", "suspicious": "transaction",
+               "spoken": "speech", "handwritten": "handwritten"}
+    return result + [aliases[x] for x in result if x in aliases]
 
 def choose(question):
     query = tokens(question)
